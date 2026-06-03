@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="LatiNTax Audit Pro - Sistema Portable de Verificación y Auditoría de Facturas con asistencia lingüística.">
+    <title>LatiNTax Audit Pro | SPVAF</title>
+    <style>
+        :root {
+            --primary-navy: #0A2540;
+            --primary-light: #153b63;
+            --accent-orange: #FF8C00;
+            --text-dark: #2D3748;
+            --text-muted: #718096;
+            --bg-light: #F8FAFC;
+            --bg-white: #FFFFFF;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Barra de Navegación */
+        nav {
+            background-color: var(--bg-white);
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* Reemplace 'logo.jpg' con la ruta de su imagen en GitHub Pages */
+        .logo-img {
+            height: 50px;
+            width: auto;
+        }
+
+        .logo-text {
+            color: var(--primary-navy);
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-muted);
+            margin-left: 2rem;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-orange);
+        }
+
+        /* Sección Hero */
+        header {
+            background: linear-gradient(135deg, var(--primary-navy) 0%, var(--primary-light) 100%);
+            color: var(--bg-white);
+            padding: 6rem 5%;
+            text-align: center;
+            border-bottom: 4px solid var(--accent-orange);
+        }
+
+        header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        header p {
+            font-size: 1.25rem;
+            font-weight: 300;
+            max-width: 750px;
+            margin: 0 auto 3rem auto;
+            color: #E2E8F0;
+        }
+
+        /* Botones de Acción */
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 32px;
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-orange);
+            color: var(--primary-navy);
+            box-shadow: 0 4px 14px rgba(255, 140, 0, 0.4);
+        }
+
+        .btn-primary:hover {
+            background-color: #ff9e22;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 140, 0, 0.6);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--bg-white);
+            border: 2px solid var(--bg-white);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .sys-req {
+            display: block;
+            margin-top: 15px;
+            font-size: 0.85rem;
+            color: #CBD5E0;
+        }
+
+        /* Contenedor Principal */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 5rem 5%;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            color: var(--primary-navy);
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .section-divider {
+            height: 4px;
+            width: 60px;
+            background-color: var(--accent-orange);
+            margin: 0 auto;
+            border-radius: 2px;
+        }
+
+        /* Grid de Características */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .feature-card {
+            background: var(--bg-white);
+            padding: 2.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.02), 0 10px 15px rgba(0,0,0,0.03);
+            border-top: 4px solid transparent;
+            transition: all 0.4s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            border-top-color: var(--accent-orange);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+        }
+
+        .feature-card h3 {
+            color: var(--primary-navy);
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card p {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        /* Sección B2B */
+        .b2b-section {
+            background-color: var(--bg-white);
+            border-radius: 12px;
+            padding: 4rem;
+            margin-top: 5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 10px 30px rgba(10, 37, 64, 0.05);
+            border-left: 8px solid var(--primary-navy);
+        }
+
+        .b2b-content {
+            flex: 1;
+            padding-right: 3rem;
+        }
+
+        .b2b-stat {
+            flex-basis: 30%;
+            text-align: center;
+            padding-left: 3rem;
+            border-left: 1px solid #E2E8F0;
+        }
+
+        .stat-number {
+            font-size: 4rem;
+            font-weight: 800;
+            color: var(--accent-orange);
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            color: var(--primary-navy);
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--primary-navy);
+            color: #A0AEC0;
+            text-align: center;
+            padding: 2rem 5%;
+            font-size: 0.95rem;
+            border-top: 1px solid #2D3748;
+        }
+
+        /* Media Queries para Responsividad */
+        @media (max-width: 768px) {
+            .b2b-section {
+                flex-direction: column;
+                padding: 2.5rem;
+                text-align: center;
+                border-left: none;
+                border-top: 8px solid var(--primary-navy);
+            }
+            .b2b-content {
+                padding-right: 0;
+                margin-bottom: 2rem;
+            }
+            .b2b-stat {
+                padding-left: 0;
+                border-left: none;
+                border-top: 1px solid #E2E8F0;
+                padding-top: 2rem;
+            }
+            header h1 {
+                font-size: 2.5rem;
+            }
+            .nav-links {
+                display: none; /* Para mantener minimalismo en móviles, se podría implementar un menú hamburguesa posteriormente */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo-container">
+            <span class="logo-text">LNTAP</span>
+        </div>
+        <div class="nav-links">
+            <a href="#arquitectura">Arquitectura</a>
+            <a href="#soluciones">Soluciones</a>
+            <a href="#b2b">Impacto B2B</a>
+        </div>
+    </nav>
+
+    <header>
+        <h1>LatiNTax Audit Pro</h1>
+        <p>El primer Sistema Portable de Verificación y Auditoría de Facturas (SPVAF) diseñado para erradicar las barreras lingüísticas en la gestión financiera de la comunidad latina.</p>
+        
+        <div class="btn-group">
+            <a href="#arquitectura" class="btn btn-secondary">Explorar Arquitectura</a>
+            <a href="./descargas/LantiNTax_Audit_Pro.zip" download class="btn btn-primary">Descargar Software de Facturacion (.zip)</a>
+        </div>
+        <span class="sys-req">Ejecutable portable autónomo (Zero-Install). Requiere Windows 10/11.</span>
+    </header>
+
+    <div class="container">
+        
+        <div class="section-header" id="arquitectura">
+            <h2 class="section-title">Ingeniería de Sistemas al Servicio de las Finanzas</h2>
+            <div class="section-divider"></div>
+        </div>
+
+        <div class="features-grid">
+            <div class="feature-card" id="soluciones">
+                <h3>Traducción Contextual Precisa</h3>
+                <p>Procesamiento algorítmico que interpreta y traduce la compleja terminología fiscal anglosajona (Sales Tax, Fees, Supplies) al español, previniendo errores de clasificación y protegiendo el patrimonio del usuario.</p>
+            </div>
+
+            <div class="feature-card">
+                <h3>Arquitectura Minimalista Local</h3>
+                <p>Desarrollado bajo una topología de microservicios locales en Python y SQLite. Garantiza un procesamiento ultrarrápido y privacidad absoluta, almacenando el historial transaccional en el disco duro del cliente sin requerir la Nube.</p>
+            </div>
+
+            <div class="feature-card">
+                <h3>Validación Aritmética Instantánea</h3>
+                <p>Motor lógico integrado que audita de forma automática la coherencia entre montos base y tasas impositivas, mitigando el factor de error humano en un entorno de interfaz limpia, asíncrona y responsiva.</p>
+            </div>
+        </div>
+
+        <div class="b2b-section" id="b2b">
+            <div class="b2b-content">
+                <h2 class="section-title" style="text-align: left; margin-bottom: 15px;">Escalabilidad B2B</h2>
+                <p style="color: var(--text-muted); font-size: 1.1rem;">
+                    Para firmas contables y despachos fiscales, el volumen de clientes latinos representa un mercado en expansión. LatiNTax Audit Pro optimiza la cadena de valor operativa, automatizando la validación documental y permitiendo que los analistas se enfoquen en la estrategia fiscal en lugar de la revisión manual y traducción.
+                </p>
+            </div>
+            <div class="b2b-stat">
+                <div class="stat-number">+40%</div>
+                <div class="stat-label">Eficiencia Operativa Proyectada</div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2026 LatiNTax Audit Pro (SPVAF). Un Proyecto de Latinos para Latinos.</p>
+    </footer>
+
+</body>
+</html>
