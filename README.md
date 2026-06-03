@@ -1,0 +1,2 @@
+# Sistema-Portable-de-Auditoria-con-Asistencia-Linguistica---latintaxauditpro
+El Sistema Portable de Verificación y Auditoría de Facturas con Asistencia Lingüística, comercialmente denominado LatiNTax Audit Pro, es una aplicación de escritorio del tipo híbrida basada en una arquitectura de micro servicios local. Funciona como un motor de procesamiento autónomo que combina un backend ligero programado en Python
