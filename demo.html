@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LatiNTax Audit Pro | Demo Visual Interactiva</title>
+    <style>
+        :root {
+            --primary-navy: #0A2540;
+            --primary-light: #153b63;
+            --accent-orange: #FF8C00;
+            --text-dark: #2D3748;
+            --text-muted: #718096;
+            --bg-light: #F8FAFC;
+            --bg-white: #FFFFFF;
+            --sidebar-bg: #0A2540;
+            --sidebar-hover: #153b63;
+            --success-green: #10B981;
+            --warning-yellow: #F59E0B;
+            --danger-red: #EF4444;
+            --info-blue: #3B82F6;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+        body { background-color: var(--bg-light); color: var(--text-dark); overflow-x: hidden; }
+
+        .top-bar {
+            background: linear-gradient(135deg, var(--primary-navy) 0%, var(--primary-light) 100%);
+            color: white; padding: 0.8rem 1.5rem; display: flex; justify-content: space-between; align-items: center;
+            position: fixed; top: 0; left: 0; right: 0; z-index: 1000; height: 60px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .top-bar-left { display: flex; align-items: center; gap: 15px; }
+        .logo-demo { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.5px; }
+        .logo-demo span { color: var(--accent-orange); }
+        .badge-demo {
+            background: var(--accent-orange); color: var(--primary-navy); padding: 4px 12px;
+            border-radius: 20px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+        }
+        .top-bar-right { display: flex; align-items: center; gap: 15px; }
+        .top-bar-btn {
+            background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white;
+            padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 0.9rem;
+            transition: all 0.3s ease; text-decoration: none; display: inline-flex; align-items: center; gap: 6px;
+        }
+        .top-bar-btn:hover { background: rgba(255,255,255,0.2); }
+        .top-bar-btn.primary { background: var(--accent-orange); color: var(--primary-navy); border: none; font-weight: 600; }
+        .top-bar-btn.primary:hover { background: #ff9e22; transform: translateY(-1px); }
+
+        .app-container { display: flex; margin-top: 60px; min-height: calc(100vh - 60px); }
+
+        .sidebar {
+            width: 260px; background: var(--sidebar-bg); color: white; padding: 1.5rem 0;
+            position: fixed; height: calc(100vh - 60px); overflow-y: auto; transition: all 0.3s ease;
+        }
+        .sidebar-section { padding: 0 1.2rem; margin-bottom: 1.5rem; }
+        .sidebar-title {
+            font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1.5px;
+            color: rgba(255,255,255,0.4); margin-bottom: 0.8rem; padding-left: 0.8rem;
+        }
+        .sidebar-item {
+            display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 8px;
+            cursor: pointer; transition: all 0.3s ease; margin-bottom: 4px; font-size: 0.95rem;
+            color: rgba(255,255,255,0.8); border-left: 3px solid transparent;
+        }
+        .sidebar-item:hover { background: var(--sidebar-hover); color: white; border-left-color: var(--accent-orange); }
+        .sidebar-item.active { background: var(--sidebar-hover); color: white; border-left-color: var(--accent-orange); font-weight: 600; }
+        .sidebar-item svg { width: 20px; height: 20px; opacity: 0.7; }
+        .sidebar-item:hover svg, .sidebar-item.active svg { opacity: 1; }
+
+        .main-content { flex: 1; margin-left: 260px; padding: 2rem; background: var(--bg-light); min-height: calc(100vh - 60px); }
+
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        .page-title { font-size: 1.8rem; color: var(--primary-navy); font-weight: 700; }
+        .page-subtitle { color: var(--text-muted); font-size: 0.95rem; margin-top: 4px; }
+        .status-badge {
+            display: inline-flex; align-items: center; gap: 6px; background: white;
+            padding: 8px 16px; border-radius: 20px; font-size: 0.85rem; font-weight: 600;
+            color: var(--success-green); box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        .status-dot { width: 8px; height: 8px; background: var(--success-green); border-radius: 50%; animation: pulse 2s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.2rem; margin-bottom: 2rem; }
+        .stat-card {
+            background: white; border-radius: 12px; padding: 1.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.04); border-top: 4px solid var(--accent-orange);
+            transition: transform 0.3s ease;
+        }
+        .stat-card:hover { transform: translateY(-3px); box-shadow: 0 8px 25px rgba(0,0,0,0.08); }
+        .stat-card.blue { border-top-color: var(--info-blue); }
+        .stat-card.green { border-top-color: var(--success-green); }
+        .stat-card.red { border-top-color: var(--danger-red); }
+        .stat-label-card { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-value { font-size: 1.8rem; font-weight: 800; color: var(--primary-navy); }
+        .stat-change { font-size: 0.85rem; margin-top: 0.3rem; font-weight: 600; }
+        .stat-change.positive { color: var(--success-green); }
+        .stat-change.negative { color: var(--danger-red); }
+
+        .panel { background: white; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.04); margin-bottom: 2rem; overflow: hidden; }
+        .panel-header { padding: 1.2rem 1.5rem; border-bottom: 1px solid #E2E8F0; display: flex; justify-content: space-between; align-items: center; }
+        .panel-title { font-size: 1.1rem; font-weight: 700; color: var(--primary-navy); display: flex; align-items: center; gap: 10px; }
+        .panel-body { padding: 1.5rem; }
+
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 1.5rem; }
+        .form-group { display: flex; flex-direction: column; gap: 6px; }
+        .form-label { font-size: 0.9rem; font-weight: 600; color: var(--text-dark); }
+        .form-input, .form-select {
+            padding: 10px 14px; border: 2px solid #E2E8F0; border-radius: 8px; font-size: 0.95rem;
+            transition: all 0.3s ease; background: white; color: var(--text-dark);
+        }
+        .form-input:focus, .form-select:focus { outline: none; border-color: var(--accent-orange); box-shadow: 0 0 0 3px rgba(255, 140, 0, 0.1); }
+        .form-input::placeholder { color: #A0AEC0; }
+
+        .drop-zone {
+            border: 2px dashed #CBD5E0; border-radius: 12px; padding: 2.5rem; text-align: center;
+            background: #FAFBFC; transition: all 0.3s ease; cursor: pointer; margin-bottom: 1.5rem;
+        }
+        .drop-zone:hover { border-color: var(--accent-orange); background: rgba(255, 140, 0, 0.03); }
+        .drop-zone.dragover { border-color: var(--accent-orange); background: rgba(255, 140, 0, 0.08); transform: scale(1.01); }
+        .drop-zone-icon { font-size: 3rem; margin-bottom: 1rem; color: var(--text-muted); }
+        .drop-zone-text { color: var(--text-muted); font-size: 1rem; margin-bottom: 0.5rem; }
+        .drop-zone-hint { font-size: 0.85rem; color: #A0AEC0; }
+        .file-list { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 1rem; }
+        .file-tag {
+            background: var(--primary-navy); color: white; padding: 6px 12px; border-radius: 20px;
+            font-size: 0.85rem; display: inline-flex; align-items: center; gap: 6px; animation: fadeIn 0.3s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+        .file-tag button { background: none; border: none; color: white; cursor: pointer; font-size: 1rem; line-height: 1; padding: 0; margin-left: 4px; }
+
+        .action-bar { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #E2E8F0; }
+        .btn-action {
+            padding: 10px 24px; border-radius: 8px; font-weight: 600; font-size: 0.95rem;
+            cursor: pointer; transition: all 0.3s ease; border: none; display: inline-flex; align-items: center; gap: 8px;
+        }
+        .btn-action.primary { background: var(--accent-orange); color: var(--primary-navy); }
+        .btn-action.primary:hover { background: #ff9e22; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(255, 140, 0, 0.3); }
+        .btn-action.secondary { background: white; color: var(--text-dark); border: 2px solid #E2E8F0; }
+        .btn-action.secondary:hover { border-color: var(--primary-navy); color: var(--primary-navy); }
+
+        .data-table { width: 100%; border-collapse: collapse; font-size: 0.95rem; }
+        .data-table th {
+            background: #F8FAFC; padding: 12px 16px; text-align: left; font-weight: 600;
+            color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #E2E8F0;
+        }
+        .data-table td { padding: 14px 16px; border-bottom: 1px solid #F1F5F9; color: var(--text-dark); }
+        .data-table tr:hover td { background: #FAFBFC; }
+        .tag { display: inline-block; padding: 4px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: 600; }
+        .tag-iva { background: #DBEAFE; color: #1E40AF; }
+        .tag-isr { background: #FEF3C7; color: #92400E; }
+        .tag-ieps { background: #FEE2E2; color: #991B1B; }
+        .tag-local { background: #D1FAE5; color: #065F46; }
+        .amount { font-weight: 700; font-family: 'Courier New', monospace; }
+        .amount.usd { color: var(--success-green); }
+        .amount.mxn { color: var(--primary-navy); }
+
+        .chart-container { display: flex; gap: 2rem; align-items: center; flex-wrap: wrap; }
+        .donut-chart { position: relative; width: 200px; height: 200px; }
+        .donut-chart svg { transform: rotate(-90deg); }
+        .donut-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
+        .donut-value { font-size: 1.8rem; font-weight: 800; color: var(--primary-navy); }
+        .donut-label { font-size: 0.85rem; color: var(--text-muted); }
+        .chart-legend { flex: 1; min-width: 200px; }
+        .legend-item { display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #F1F5F9; }
+        .legend-color { width: 12px; height: 12px; border-radius: 3px; margin-right: 10px; }
+        .legend-info { display: flex; align-items: center; flex: 1; }
+        .legend-name { font-weight: 600; color: var(--text-dark); }
+        .legend-value { font-weight: 700; color: var(--primary-navy); font-family: 'Courier New', monospace; }
+
+        .progress-container { margin-top: 1.5rem; }
+        .progress-header { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 0.9rem; }
+        .progress-bar { height: 10px; background: #E2E8F0; border-radius: 5px; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent-orange), #FFB347); border-radius: 5px; transition: width 0.8s ease; position: relative; }
+        .progress-fill::after { content: ''; position: absolute; right: 0; top: 0; bottom: 0; width: 20px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3)); }
+
+        .toast-container { position: fixed; bottom: 20px; right: 20px; z-index: 9999; }
+        .toast {
+            background: var(--primary-navy); color: white; padding: 14px 20px; border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: flex; align-items: center; gap: 10px;
+            margin-top: 10px; animation: slideIn 0.3s ease; font-size: 0.95rem;
+        }
+        .toast.success { border-left: 4px solid var(--success-green); }
+        .toast.warning { border-left: 4px solid var(--warning-yellow); }
+        .toast.error { border-left: 4px solid var(--danger-red); }
+        .toast.info { border-left: 4px solid var(--info-blue); }
+        @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        .toast-close { background: none; border: none; color: white; cursor: pointer; font-size: 1.2rem; margin-left: 10px; }
+
+        .demo-notice {
+            background: linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 100%); border: 2px solid var(--accent-orange);
+            border-radius: 12px; padding: 1rem 1.5rem; margin-bottom: 2rem; display: flex; align-items: center; gap: 15px; color: var(--primary-navy);
+        }
+        .demo-notice-icon { font-size: 1.5rem; }
+        .demo-notice-text { flex: 1; }
+        .demo-notice-title { font-weight: 700; font-size: 1rem; }
+        .demo-notice-desc { font-size: 0.9rem; color: var(--text-muted); margin-top: 2px; }
+
+        @media (max-width: 768px) {
+            .sidebar { transform: translateX(-100%); z-index: 999; }
+            .sidebar.open { transform: translateX(0); }
+            .main-content { margin-left: 0; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .form-grid { grid-template-columns: 1fr; }
+            .chart-container { flex-direction: column; align-items: flex-start; }
+            .page-header { flex-direction: column; align-items: flex-start; gap: 1rem; }
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #CBD5E0; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #A0AEC0; }
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <div class="top-bar-left">
+            <div class="logo-demo">LNT<span>AP</span></div>
+            <span class="badge-demo">Demo Visual</span>
+        </div>
+        <div class="top-bar-right">
+            <a href="index.html" class="top-bar-btn">
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Volver al Inicio
+            </a>
+            <a href="./descargas/LantiNTax_Audit_Pro.exe" download class="top-bar-btn primary">
+                <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Descargar Software
+            </a>
+        </div>
+    </div>
+
+    <div class="app-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-section">
+                <div class="sidebar-title">Principal</div>
+                <div class="sidebar-item active" onclick="switchTab('dashboard')">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                    </svg>
+                    Dashboard
+                </div>
+                <div class="sidebar-item" onclick="switchTab('auditoria')">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    Auditorias
+                </div>
+                <div class="sidebar-item" onclick="switchTab('informes')">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    Informes
+                </div>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-title">Gestion</div>
+                <div class="sidebar-item" onclick="switchTab('facturas')">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    Facturas
+                </div>
+                <div class="sidebar-item" onclick="switchTab('cumplimiento')">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Cumplimiento
+                </div>
+                <div class="sidebar-item" onclick="switchTab('api')">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                    </svg>
+                    API & Dev
+                </div>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-title">Sistema</div>
+                <div class="sidebar-item" onclick="switchTab('config')">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    Configuracion
+                </div>
+                <div class="sidebar-item" onclick="switchTab('soporte')">
+                    <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                    Soporte
+                </div>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="demo-notice">
+                <div class="demo-notice-icon">🖥️</div>
+                <div class="demo-notice-text">
+                    <div class="demo-notice-title">Modo Demo Visual Interactivo</div>
+                    <div class="demo-notice-desc">Esta es una simulacion visual del software. Los datos ingresados no se guardan. Para funcionalidad completa, descarga el software.</div>
+                </div>
+            </div>
+
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title" id="pageTitle">Dashboard</h1>
+                    <p class="page-subtitle" id="pageSubtitle">Panel de control y resumen de auditorias fiscales</p>
+                </div>
+                <div class="status-badge">
+                    <span class="status-dot"></span>
+                    Sistema Online
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label-card">Facturas Procesadas</div>
+                    <div class="stat-value" id="statFacturas">1,247</div>
+                    <div class="stat-change positive">↑ 12% vs mes anterior</div>
+                </div>
+                <div class="stat-card blue">
+                    <div class="stat-label-card">Monto Total Auditado</div>
+                    <div class="stat-value" id="statMonto">$45,230</div>
+                    <div class="stat-change positive">↑ 8.5% vs mes anterior</div>
+                </div>
+                <div class="stat-card green">
+                    <div class="stat-label-card">Tasa de Cumplimiento</div>
+                    <div class="stat-value" id="statCumplimiento">94.2%</div>
+                    <div class="stat-change positive">↑ 3.1% vs mes anterior</div>
+                </div>
+                <div class="stat-card red">
+                    <div class="stat-label-card">Errores Detectados</div>
+                    <div class="stat-value" id="statErrores">23</div>
+                    <div class="stat-change negative">↓ 15% vs mes anterior</div>
+                </div>
+            </div>
+
+            <div class="panel" id="panelAuditoria">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="var(--accent-orange)" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        Nueva Auditoria de Factura
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+                        <div class="drop-zone-icon">📄</div>
+                        <div class="drop-zone-text">Arrastra archivos PDF de facturas aqui</div>
+                        <div class="drop-zone-hint">O haz clic para seleccionar archivos (PDF, JPG, PNG)</div>
+                        <input type="file" id="fileInput" multiple accept=".pdf,.jpg,.png" style="display: none;" onchange="handleFiles(this.files)">
+                    </div>
+                    <div class="file-list" id="fileList"></div>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label">Tipo de Factura</label>
+                            <select class="form-select" id="tipoFactura" onchange="calcularTotales()">
+                                <option value="">Seleccionar tipo...</option>
+                                <option value="venta">Factura de Venta</option>
+                                <option value="compra">Factura de Compra</option>
+                                <option value="servicio">Factura de Servicio</option>
+                                <option value="honorarios">Recibo de Honorarios</option>
+                                <option value="arrendamiento">Arrendamiento</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Tipo de Impuesto</label>
+                            <select class="form-select" id="tipoImpuesto" onchange="calcularTotales()">
+                                <option value="">Seleccionar impuesto...</option>
+                                <option value="iva">IVA (16%)</option>
+                                <option value="isr">ISR (10%)</option>
+                                <option value="ieps">IEPS</option>
+                                <option value="local">Impuestos Locales</option>
+                                <option value="exento">Exento/0%</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Monto Base ($)</label>
+                            <input type="number" class="form-input" id="montoBase" placeholder="0.00" step="0.01" oninput="calcularTotales()">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Tasa Impositiva (%)</label>
+                            <input type="number" class="form-input" id="tasaImpuesto" placeholder="16.00" step="0.01" oninput="calcularTotales()">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Estimacion en USD</label>
+                            <input type="number" class="form-input" id="estimacionUSD" placeholder="0.00" step="0.01" oninput="calcularTotales()">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Tipo de Cambio</label>
+                            <input type="number" class="form-input" id="tipoCambio" placeholder="17.50" step="0.01" value="17.50" oninput="calcularTotales()">
+                        </div>
+                    </div>
+
+                    <div class="stats-grid" style="margin-top: 1.5rem;">
+                        <div class="stat-card" style="border-top-color: var(--info-blue);">
+                            <div class="stat-label-card">Subtotal</div>
+                            <div class="stat-value" id="subtotal">$0.00</div>
+                        </div>
+                        <div class="stat-card" style="border-top-color: var(--warning-yellow);">
+                            <div class="stat-label-card">Impuesto</div>
+                            <div class="stat-value" id="impuestoCalc">$0.00</div>
+                        </div>
+                        <div class="stat-card" style="border-top-color: var(--success-green);">
+                            <div class="stat-label-card">Total</div>
+                            <div class="stat-value" id="total">$0.00</div>
+                        </div>
+                        <div class="stat-card" style="border-top-color: var(--accent-orange);">
+                            <div class="stat-label-card">Total USD</div>
+                            <div class="stat-value" id="totalUSD">$0.00</div>
+                        </div>
+                    </div>
+
+                    <div class="action-bar">
+                        <button class="btn-action primary" onclick="simularAuditoria()">
+                            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            Ejecutar Auditoria
+                        </button>
+                        <button class="btn-action secondary" onclick="limpiarFormulario()">
+                            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                            Limpiar
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="var(--success-green)" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z" />
+                        </svg>
+                        Distribucion de Impuestos y Valores Agregados
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="chart-container">
+                        <div class="donut-chart">
+                            <svg width="200" height="200" viewBox="0 0 200 200">
+                                <circle cx="100" cy="100" r="80" fill="none" stroke="#E2E8F0" stroke-width="20"/>
+                                <circle cx="100" cy="100" r="80" fill="none" stroke="var(--accent-orange)" stroke-width="20" 
+                                    stroke-dasharray="301.59" stroke-dashoffset="75.4" stroke-linecap="round"/>
+                                <circle cx="100" cy="100" r="80" fill="none" stroke="var(--info-blue)" stroke-width="20" 
+                                    stroke-dasharray="301.59" stroke-dashoffset="180.95" stroke-linecap="round"/>
+                                <circle cx="100" cy="100" r="80" fill="none" stroke="var(--success-green)" stroke-width="20" 
+                                    stroke-dasharray="301.59" stroke-dashoffset="241.27" stroke-linecap="round"/>
+                                <circle cx="100" cy="100" r="80" fill="none" stroke="var(--warning-yellow)" stroke-width="20" 
+                                    stroke-dasharray="301.59" stroke-dashoffset="271.43" stroke-linecap="round"/>
+                            </svg>
+                            <div class="donut-center">
+                                <div class="donut-value">$52.4K</div>
+                                <div class="donut-label">Total Taxes</div>
+                            </div>
+                        </div>
+                        <div class="chart-legend">
+                            <div class="legend-item">
+                                <div class="legend-info">
+                                    <div class="legend-color" style="background: var(--accent-orange);"></div>
+                                    <span class="legend-name">IVA Trasladado</span>
+                                </div>
+                                <span class="legend-value">$23,450</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-info">
+                                    <div class="legend-color" style="background: var(--info-blue);"></div>
+                                    <span class="legend-name">IVA Acreditable</span>
+                                </div>
+                                <span class="legend-value">$18,230</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-info">
+                                    <div class="legend-color" style="background: var(--success-green);"></div>
+                                    <span class="legend-name">ISR Retenido</span>
+                                </div>
+                                <span class="legend-value">$7,890</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-info">
+                                    <div class="legend-color" style="background: var(--warning-yellow);"></div>
+                                    <span class="legend-name">IEPS</span>
+                                </div>
+                                <span class="legend-value">$2,830</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="var(--accent-orange)" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Puntuacion de Cumplimiento
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div class="progress-container">
+                        <div class="progress-header">
+                            <span style="font-weight: 600; color: var(--primary-navy);">Nivel de Cumplimiento Fiscal</span>
+                            <span style="font-weight: 800; color: var(--accent-orange);">87.5%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 87.5%;"></div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 1.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                        <div style="background: #F0FDF4; padding: 1rem; border-radius: 8px; border-left: 4px solid var(--success-green);">
+                            <div style="font-size: 0.85rem; color: var(--text-muted);">Registros Completos</div>
+                            <div style="font-size: 1.3rem; font-weight: 700; color: var(--success-green); margin-top: 4px;">98.2%</div>
+                        </div>
+                        <div style="background: #FFFBEB; padding: 1rem; border-radius: 8px; border-left: 4px solid var(--warning-yellow);">
+                            <div style="font-size: 0.85rem; color: var(--text-muted);">Timbrado Correcto</div>
+                            <div style="font-size: 1.3rem; font-weight: 700; color: var(--warning-yellow); margin-top: 4px;">85.4%</div>
+                        </div>
+                        <div style="background: #EFF6FF; padding: 1rem; border-radius: 8px; border-left: 4px solid var(--info-blue);">
+                            <div style="font-size: 0.85rem; color: var(--text-muted);">Clasificacion OK</div>
+                            <div style="font-size: 1.3rem; font-weight: 700; color: var(--info-blue); margin-top: 4px;">92.1%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="var(--primary-navy)" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Historial de Auditorias Recientes
+                    </div>
+                </div>
+                <div class="panel-body" style="overflow-x: auto;">
+                    <table class="data-table">
+                        <thead>
+                            <tr><th>ID</th><th>Tipo Factura</th><th>Impuesto</th><th>Monto Base</th><th>Impuesto</th><th>Total</th><th>USD</th><th>Estado</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#AUD-2026-001</td><td>Factura de Venta</td>
+                                <td><span class="tag tag-iva">IVA 16%</span></td>
+                                <td class="amount mxn">$12,500.00</td><td class="amount mxn">$2,000.00</td>
+                                <td class="amount mxn">$14,500.00</td><td class="amount usd">$828.57</td>
+                                <td><span style="color: var(--success-green); font-weight: 600;">✓ Valido</span></td>
+                            </tr>
+                            <tr>
+                                <td>#AUD-2026-002</td><td>Recibo Honorarios</td>
+                                <td><span class="tag tag-isr">ISR 10%</span></td>
+                                <td class="amount mxn">$8,750.00</td><td class="amount mxn">$875.00</td>
+                                <td class="amount mxn">$9,625.00</td><td class="amount usd">$550.00</td>
+                                <td><span style="color: var(--success-green); font-weight: 600;">✓ Valido</span></td>
+                            </tr>
+                            <tr>
+                                <td>#AUD-2026-003</td><td>Factura Compra</td>
+                                <td><span class="tag tag-iva">IVA 16%</span></td>
+                                <td class="amount mxn">$23,400.00</td><td class="amount mxn">$3,744.00</td>
+                                <td class="amount mxn">$27,144.00</td><td class="amount usd">$1,551.09</td>
+                                <td><span style="color: var(--warning-yellow); font-weight: 600;">⚠ Revisar</span></td>
+                            </tr>
+                            <tr>
+                                <td>#AUD-2026-004</td><td>Arrendamiento</td>
+                                <td><span class="tag tag-ieps">IEPS</span></td>
+                                <td class="amount mxn">$5,200.00</td><td class="amount mxn">$416.00</td>
+                                <td class="amount mxn">$5,616.00</td><td class="amount usd">$320.91</td>
+                                <td><span style="color: var(--success-green); font-weight: 600;">✓ Valido</span></td>
+                            </tr>
+                            <tr>
+                                <td>#AUD-2026-005</td><td>Servicio Profesional</td>
+                                <td><span class="tag tag-local">Local</span></td>
+                                <td class="amount mxn">$15,800.00</td><td class="amount mxn">$790.00</td>
+                                <td class="amount mxn">$16,590.00</td><td class="amount usd">$948.00</td>
+                                <td><span style="color: var(--danger-red); font-weight: 600;">✗ Error</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="panel">
+                <div class="panel-header">
+                    <div class="panel-title">
+                        <svg width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="var(--info-blue)" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                        </svg>
+                        Tareas Pendientes de Auditoria
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <div>
+                        <div style="display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #F1F5F9;">
+                            <span style="color: var(--success-green); font-size: 1.2rem;">✓</span>
+                            <span style="flex: 1; text-decoration: line-through; color: var(--text-muted);">Validar estructura XML de factura #AUD-2026-001</span>
+                            <span style="font-size: 0.85rem; color: var(--success-green); font-weight: 600;">Completado</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #F1F5F9;">
+                            <span style="color: var(--success-green); font-size: 1.2rem;">✓</span>
+                            <span style="flex: 1; text-decoration: line-through; color: var(--text-muted);">Verificar timbre fiscal del CFDI</span>
+                            <span style="font-size: 0.85rem; color: var(--success-green); font-weight: 600;">Completado</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #F1F5F9;">
+                            <span style="color: var(--warning-yellow); font-size: 1.2rem;">○</span>
+                            <span style="flex: 1; font-weight: 500;">Revisar discrepancia en monto de factura #AUD-2026-003</span>
+                            <span style="font-size: 0.85rem; color: var(--warning-yellow); font-weight: 600;">Pendiente</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #F1F5F9;">
+                            <span style="color: var(--warning-yellow); font-size: 1.2rem;">○</span>
+                            <span style="flex: 1; font-weight: 500;">Corregir clasificacion de impuesto en #AUD-2026-005</span>
+                            <span style="font-size: 0.85rem; color: var(--warning-yellow); font-weight: 600;">Pendiente</span>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 12px; padding: 12px 0;">
+                            <span style="color: var(--danger-red); font-size: 1.2rem;">○</span>
+                            <span style="flex: 1; font-weight: 500;">Auditar factura de compra internacional (USD)</span>
+                            <span style="font-size: 0.85rem; color: var(--danger-red); font-weight: 600;">Urgente</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script>
+        const tabs = {
+            dashboard: { title: 'Dashboard', subtitle: 'Panel de control y resumen de auditorias fiscales' },
+            auditoria: { title: 'Auditorias', subtitle: 'Gestion y ejecucion de auditorias de facturas' },
+            informes: { title: 'Informes', subtitle: 'Generacion de reportes regulatorios y analisis' },
+            facturas: { title: 'Facturas', subtitle: 'Catalogo y administracion de facturas procesadas' },
+            cumplimiento: { title: 'Cumplimiento', subtitle: 'Verificacion de cumplimiento fiscal y normativo' },
+            api: { title: 'API & Desarrollo', subtitle: 'Integracion y documentacion de API' },
+            config: { title: 'Configuracion', subtitle: 'Ajustes del sistema y preferencias' },
+            soporte: { title: 'Soporte', subtitle: 'Centro de ayuda y tickets de soporte' }
+        };
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.sidebar-item').forEach(item => { item.classList.remove('active'); });
+            event.currentTarget.classList.add('active');
+            const tab = tabs[tabName] || tabs.dashboard;
+            document.getElementById('pageTitle').textContent = tab.title;
+            document.getElementById('pageSubtitle').textContent = tab.subtitle;
+            showToast('info', 'Navegando a: ' + tab.title);
+        }
+
+        const dropZone = document.getElementById('dropZone');
+        const fileList = document.getElementById('fileList');
+
+        dropZone.addEventListener('dragover', (e) => { e.preventDefault(); dropZone.classList.add('dragover'); });
+        dropZone.addEventListener('dragleave', () => { dropZone.classList.remove('dragover'); });
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault(); dropZone.classList.remove('dragover'); handleFiles(e.dataTransfer.files);
+        });
+
+        function handleFiles(files) {
+            Array.from(files).forEach(file => {
+                const tag = document.createElement('div');
+                tag.className = 'file-tag';
+                tag.innerHTML = '📄 ' + file.name + ' <button onclick="this.parentElement.remove()">×</button>';
+                fileList.appendChild(tag);
+            });
+            if (files.length > 0) showToast('success', files.length + ' archivo(s) agregado(s) a la auditoria');
+        }
+
+        function calcularTotales() {
+            const montoBase = parseFloat(document.getElementById('montoBase').value) || 0;
+            const tasa = parseFloat(document.getElementById('tasaImpuesto').value) || 0;
+            const tipoCambio = parseFloat(document.getElementById('tipoCambio').value) || 17.5;
+            const estimacionUSD = parseFloat(document.getElementById('estimacionUSD').value) || 0;
+            const impuesto = montoBase * (tasa / 100);
+            const total = montoBase + impuesto;
+            const totalUSD = estimacionUSD > 0 ? estimacionUSD : total / tipoCambio;
+            document.getElementById('subtotal').textContent = '$' + montoBase.toFixed(2);
+            document.getElementById('impuestoCalc').textContent = '$' + impuesto.toFixed(2);
+            document.getElementById('total').textContent = '$' + total.toFixed(2);
+            document.getElementById('totalUSD').textContent = '$' + totalUSD.toFixed(2);
+        }
+
+        function simularAuditoria() {
+            const tipoFactura = document.getElementById('tipoFactura').value;
+            const tipoImpuesto = document.getElementById('tipoImpuesto').value;
+            const montoBase = document.getElementById('montoBase').value;
+            if (!tipoFactura || !tipoImpuesto || !montoBase) {
+                showToast('warning', 'Por favor completa todos los campos obligatorios');
+                return;
+            }
+            showToast('info', 'Analizando estructura del documento...');
+            setTimeout(() => { showToast('info', 'Validando timbre fiscal digital...'); }, 800);
+            setTimeout(() => { showToast('info', 'Calculando montos impositivos...'); }, 1600);
+            setTimeout(() => {
+                showToast('success', 'Auditoria completada exitosamente! Documento valido.');
+                const statFacturas = document.getElementById('statFacturas');
+                const current = parseInt(statFacturas.textContent.replace(',', ''));
+                statFacturas.textContent = (current + 1).toLocaleString();
+            }, 2400);
+        }
+
+        function limpiarFormulario() {
+            document.getElementById('tipoFactura').value = '';
+            document.getElementById('tipoImpuesto').value = '';
+            document.getElementById('montoBase').value = '';
+            document.getElementById('tasaImpuesto').value = '';
+            document.getElementById('estimacionUSD').value = '';
+            document.getElementById('tipoCambio').value = '17.50';
+            document.getElementById('fileList').innerHTML = '';
+            calcularTotales();
+            showToast('info', 'Formulario limpiado');
+        }
+
+        function showToast(type, message) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast ' + type;
+            const icons = { success: '✓', warning: '⚠', error: '✗', info: 'ℹ' };
+            toast.innerHTML = '<span style="font-size: 1.2rem;">' + icons[type] + '</span><span>' + message + '</span><button class="toast-close" onclick="this.parentElement.remove()">×</button>';
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(100%)';
+                setTimeout(() => toast.remove(), 300);
+            }, 4000);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            showToast('info', 'Bienvenido a la Demo Visual de LatiNTax Audit Pro');
+            setTimeout(() => { document.querySelector('.progress-fill').style.width = '87.5%'; }, 500);
+        });
+    </script>
+</body>
+</html>

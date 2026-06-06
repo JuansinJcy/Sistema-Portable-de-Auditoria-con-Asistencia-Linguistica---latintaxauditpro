@@ -15,7 +15,7 @@
             --bg-light: #F8FAFC;
             --bg-white: #FFFFFF;
         }
-        
+
         * {
             margin: 0;
             padding: 0;
@@ -50,7 +50,6 @@
             gap: 15px;
         }
 
-        /* Reemplace 'logo.jpg' con la ruta de su imagen en GitHub Pages */
         .logo-img {
             height: 50px;
             width: auto;
@@ -137,6 +136,25 @@
 
         .btn-secondary:hover {
             background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-demo {
+            background-color: rgba(255, 255, 255, 0.15);
+            color: var(--bg-white);
+            border: 2px solid var(--accent-orange);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-demo:hover {
+            background-color: var(--accent-orange);
+            color: var(--primary-navy);
+        }
+
+        .btn-demo svg {
+            width: 20px;
+            height: 20px;
         }
 
         .sys-req {
@@ -245,6 +263,52 @@
             margin-top: 0.5rem;
         }
 
+        /* Banner Demo */
+        .demo-banner {
+            background: linear-gradient(135deg, var(--primary-navy) 0%, var(--primary-light) 100%);
+            border-radius: 12px;
+            padding: 3rem;
+            margin-top: 4rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: white;
+            box-shadow: 0 10px 30px rgba(10, 37, 64, 0.15);
+        }
+
+        .demo-banner-content h3 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .demo-banner-content p {
+            color: #CBD5E0;
+            font-size: 1.05rem;
+            max-width: 600px;
+        }
+
+        .demo-banner-btn {
+            background-color: var(--accent-orange);
+            color: var(--primary-navy);
+            padding: 14px 32px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 1.1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 14px rgba(255, 140, 0, 0.4);
+            white-space: nowrap;
+        }
+
+        .demo-banner-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 140, 0, 0.6);
+            background-color: #ff9e22;
+        }
+
         /* Footer */
         footer {
             background-color: var(--primary-navy);
@@ -274,11 +338,19 @@
                 border-top: 1px solid #E2E8F0;
                 padding-top: 2rem;
             }
+            .demo-banner {
+                flex-direction: column;
+                text-align: center;
+                gap: 1.5rem;
+            }
+            .demo-banner-content p {
+                max-width: 100%;
+            }
             header h1 {
                 font-size: 2.5rem;
             }
             .nav-links {
-                display: none; /* Para mantener minimalismo en móviles, se podría implementar un menú hamburguesa posteriormente */
+                display: none;
             }
         }
     </style>
@@ -293,22 +365,29 @@
             <a href="#arquitectura">Arquitectura</a>
             <a href="#soluciones">Soluciones</a>
             <a href="#b2b">Impacto B2B</a>
+            <a href="demo.html" style="color: var(--accent-orange); font-weight: 700;">🖥️ Demo Interactiva</a>
         </div>
     </nav>
 
     <header>
         <h1>LatiNTax Audit Pro</h1>
         <p>El primer Sistema Portable de Verificación y Auditoría de Facturas (SPVAF) diseñado para erradicar las barreras lingüísticas en la gestión financiera de la comunidad latina.</p>
-        
+
         <div class="btn-group">
             <a href="#arquitectura" class="btn btn-secondary">Explorar Arquitectura</a>
-            <a href="./descargas/LantiNTax_Audit_Pro.zip" download class="btn btn-primary">Descargar Software de Facturacion (.zip)</a>
+            <a href="demo.html" class="btn btn-demo">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                Ver Demo Interactiva
+            </a>
+            <a href="./descargas/LantiNTax_Audit_Pro.exe" download class="btn btn-primary">Descargar Software (.zip)</a>
         </div>
         <span class="sys-req">Ejecutable portable autónomo (Zero-Install). Requiere Windows 10/11.</span>
     </header>
 
     <div class="container">
-        
+
         <div class="section-header" id="arquitectura">
             <h2 class="section-title">Ingeniería de Sistemas al Servicio de las Finanzas</h2>
             <div class="section-divider"></div>
@@ -342,6 +421,20 @@
                 <div class="stat-number">+40%</div>
                 <div class="stat-label">Eficiencia Operativa Proyectada</div>
             </div>
+        </div>
+
+        <div class="demo-banner">
+            <div class="demo-banner-content">
+                <h3>¿Quieres ver el software antes de descargarlo?</h3>
+                <p>Explora nuestra demo visual interactiva y experimenta la interfaz de LatiNTax Audit Pro directamente desde tu navegador. Sin instalación, sin compromisos.</p>
+            </div>
+            <a href="demo.html" class="demo-banner-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+                Probar Demo Ahora
+            </a>
         </div>
 
     </div>
