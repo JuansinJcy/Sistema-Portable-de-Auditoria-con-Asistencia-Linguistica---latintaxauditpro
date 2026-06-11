@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>LantiNTax Audit Pro</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #F6F9FC; color: #333; margin: 0; padding: 20px; }
+        .header { background-color: #0A2540; color: white; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-bottom: 4px solid #FF8C00;}
+        .container { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); max-width: 600px; margin: auto; }
+        input, button { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        button { background-color: #0A2540; color: white; font-weight: bold; cursor: pointer; border: none; }
+        button:hover { background-color: #1a4066; }
+        #resultado { margin-top: 20px; padding: 15px; background-color: #e6f7ff; border-left: 4px solid #00D4FF; display: none; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h2>LantiNTax Audit Pro - Auditoría Local</h2>
+    </div>
+    <div class="container">
+        <h3>Ingreso de Factura (Inglés)</h3>
+        <input type="text" id="concepto" placeholder="Concepto (Ej: invoice, supplies, fee)">
+        <input type="number" id="monto" placeholder="Monto Base (USD)">
+        <input type="number" id="tax_rate" placeholder="Porcentaje de Impuesto (Sales Tax %)">
+        <button onclick="auditarFactura()">Auditar y Traducir</button>
+
+        <div id="resultado">
+            <h4 style="margin-top: 0; color: #0A2540;">Resultados de la Auditoría:</h4>
+            <p><strong>Traducción Contextual:</strong> <span id="res_trad"></span></p>
+            <p><strong>Total Validado (Inc. Tax):</strong> $<span id="res_total"></span> USD</p>
+            <p><strong>Estado:</strong> <span id="res_estado"></span></p>
+            <p style="font-size: 0.8em; color: #666;">*Los datos han sido guardados de forma segura y local en su equipo.</p>
+        </div>
+    </div>
+
+    <script>
+        function auditarFactura() {
+            const data = {
+                concepto: document.getElementById('concepto').value,
+                monto: document.getElementById('monto').value,
+                tax_rate: document.getElementById('tax_rate').value
+            };
+
+            fetch('/procesar', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if(data.status === 'success') {
+                    document.getElementById('resultado').style.display = 'block';
+                    document.getElementById('res_trad').innerText = data.traduccion;
+                    document.getElementById('res_total').innerText = data.total_auditado;
+                    document.getElementById('res_estado').innerText = data.estado;
+                }
+            });
+        }
+    </script>
+</body>
+</html>
